@@ -24,11 +24,16 @@ def handle_client(conn, adress):
         while connection:
             msg = conn.recv(1024).decode()
             if msg:
+                if msg == 'Error':
+                    connection = False
+                    print(f"Connection with {adress} is broken!")
+                    break
+
                 if (msg == DISCONNECT_MESSAGE):
                     connection = False
                     print(f"Connection with {adress} successfully terminated")
                     break
-
+                
                 print(f"[ {adress} ] : {msg}")
 
         conn.close()

@@ -16,16 +16,14 @@ def send_message(msg):
 
 
 def start():
-    while True:
-        try:
+    try:
+        while True:
             message = input()
-
-            if message != DISCONNECT_MESSAGE:
-                send_message(message)
-            else:
-                break
-        except:
-            print(f"Connection is broken!")
+            send_message(message)
+    except:
+        print(f"Connection is broken!")
+        client.send("Error".encode(FORMAT))
+        client.close()
 
 
 if __name__ == '__main__':
