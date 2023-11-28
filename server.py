@@ -3,12 +3,12 @@ import threading
 
 PORT = 5050
 SERVER = socket.gethostbyname(socket.gethostname())
-ADDR = (SERVER, PORT)
+ADDRES = (SERVER, PORT)
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = '!DISCONNECT!'
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(ADDR)
+server.bind(ADDRES)
 
 clients = []
 
@@ -23,12 +23,13 @@ def handle_client(conn, adress):
         connection = True
         while connection:
             msg = conn.recv(1024).decode()
-            if (msg == DISCONNECT_MESSAGE):
-                connection = False
-                print(f"Connection with {adress} successfully terminated")
-                break
+            if msg:
+                if (msg == DISCONNECT_MESSAGE):
+                    connection = False
+                    print(f"Connection with {adress} successfully terminated")
+                    break
 
-            print(f"[ {adress} ] : {msg}")
+                print(f"[ {adress} ] : {msg}")
 
         conn.close()
 
@@ -39,11 +40,12 @@ def handle_client(conn, adress):
 
 def start():
     server.listen()
+    print(f"Listening server: {SERVER}")
     while True:
         conn, adress = server.accept()
         thread = threading.Thread(target=handle_client, args=(conn, adress))
         thread.start()
-        print(f"Now active connection: {threading.activeCount() - 1}")
+        print(f"Now active connection: {threading.active_count() - 1}")
         print(clients)
 
 
