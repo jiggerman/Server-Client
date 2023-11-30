@@ -10,6 +10,33 @@ def isExpression(message) -> bool:
         return True
 
 
+def IsBracketsOkey(message) -> bool:
+    lst = []
+    for char in message:
+        if char in "({[":
+            lst.append(char)
+        elif char == ")":
+            if len(lst) > 0 and lst[-1] == "(":
+                lst.pop(-1)
+            else:
+                return False
+        elif char == "}":
+            if len(lst) > 0 and lst[-1] == "{":
+                lst.pop(-1)
+            else:
+                return False
+        elif char == "]":
+            if len(lst) > 0 and lst[-1] == "[":
+                lst.pop(-1)
+            else:
+                return False
+    else:
+        if len(lst) == 0:
+            return True
+        else:
+            return False
+
+
 def sumDiff(expression, result = 0) -> str:
 
     if '+' not in expression and '-' not in expression:
