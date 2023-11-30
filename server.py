@@ -1,5 +1,6 @@
 import socket
 import threading
+from calculate import *
 
 PORT = 5050
 SERVER = socket.gethostbyname(socket.gethostname())
@@ -11,7 +12,7 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDRES)
 
 clients = []
-
+    
 
 def handle_client(conn, adress):
     try:
@@ -21,13 +22,20 @@ def handle_client(conn, adress):
             clients.append(adress)
 
         connection = True
+
         while connection:
             msg = conn.recv(1024).decode()
             if msg:
                 if msg == 'Error':
                     connection = False
                     print(f"Connection with {adress} is broken!")
+                    clients.pop(clients.index(adress))
                     break
+
+                if (isExpression(msg)):
+                    print(msg)
+                    answer = 'Answer: ' + str(calculate(msg))
+                    conn.send(answer.encode(FORMAT))
 
                 if (msg == DISCONNECT_MESSAGE):
                     connection = False
