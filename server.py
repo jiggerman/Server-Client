@@ -28,22 +28,21 @@ def handle_client(conn, adress):
             if msg:
                 if msg == 'Error':
                     connection = False
-                    print(f"Connection with {adress} is broken!")
                     clients.pop(clients.index(adress))
                     break
 
-                if (isExpression(msg)):
-                    print(msg)
-                    answer = 'Answer: ' + str(calculate(msg))
+                if (isExpression(deleteWhiteSpace(msg))):
+                    answer = 'Answer: ' + str(calculate(deleteWhiteSpace(msg)))
                     conn.send(answer.encode(FORMAT))
 
                 if (msg == DISCONNECT_MESSAGE):
                     connection = False
                     print(f"Connection with {adress} successfully terminated")
                     break
-                
+
                 print(f"[ {adress} ] : {msg}")
 
+        clients.pop(clients.index(adress))
         conn.close()
 
     except:

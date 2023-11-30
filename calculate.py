@@ -1,3 +1,7 @@
+def deleteWhiteSpace(message) -> str:
+    return message.replace(" ", "")
+
+
 def isExpression(message) -> bool:
     for i in message:
         if i not in '1234567890+-*/':
