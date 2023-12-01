@@ -180,6 +180,3 @@ def calculate(expression) -> str:
         return brackets(expression.replace(" ", ""))
     else:
         return False
-
-
-print(calculate("os.exit()"))
