@@ -4,7 +4,7 @@ def deleteWhiteSpace(message) -> str:
 
 def isExpression(message) -> bool:
     for i in message:
-        if i not in '1234567890+-*/':
+        if i not in '1234567890+-*/()':
             return False
     else:
         return True
@@ -13,28 +13,15 @@ def isExpression(message) -> bool:
 def IsBracketsOkey(message) -> bool:
     lst = []
     for char in message:
-        if char in "({[":
+        if char == '(':
             lst.append(char)
         elif char == ")":
             if len(lst) > 0 and lst[-1] == "(":
                 lst.pop(-1)
             else:
                 return False
-        elif char == "}":
-            if len(lst) > 0 and lst[-1] == "{":
-                lst.pop(-1)
-            else:
-                return False
-        elif char == "]":
-            if len(lst) > 0 and lst[-1] == "[":
-                lst.pop(-1)
-            else:
-                return False
     else:
-        if len(lst) == 0:
-            return True
-        else:
-            return False
+        return not(len(lst))
 
 
 def sumDiff(expression, result = 0) -> str:
@@ -93,5 +80,25 @@ def powDiv(expression) -> str:
     return powDiv(expression)
 
 
+def brackets(expression) -> str:
+    if '(' not in expression:
+        return powDiv(expression)
+    
+    leftIndex = 0
+    rightIndex = 0
+
+    for idx, char in enumerate(expression):
+        if char == '(':
+            leftIndex = idx
+        elif char == ')':
+            rightIndex = idx
+            break
+
+    expression = expression[0:leftIndex] + powDiv(expression[leftIndex + 1: rightIndex]) + expression[rightIndex + 1:]
+    print(expression)
+
+    return brackets(expression)
+
+
 def calculate(expression):
-    return powDiv(expression)
+    return brackets(expression)
