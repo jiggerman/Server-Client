@@ -21,9 +21,10 @@ def IsBracketsOkey(expression) -> bool:
 
 
 def sumDiff(expression) -> str:
+    
     if '+' not in expression and '-' not in expression:
         return expression
-    
+
     result = 0
     lastInd = 0
 
@@ -41,13 +42,13 @@ def powDiv(expression) -> str:
 
     if '*' not in expression and '/' not in expression:
         return sumDiff(expression)
-    
+
     for ind, char in enumerate(expression):
         if char in '*/':
             index = ind
             break
 
-    leftIndex = -1
+    leftIndex = 0
     rightIndex = len(expression)
 
     for lfInd in range(index - 1, 0, -1):
@@ -60,7 +61,7 @@ def powDiv(expression) -> str:
             rightIndex = rgInd
             break
 
-    lValue = float(expression[leftIndex + 1:index])
+    lValue = float(expression[leftIndex:index])
     rValue = float(expression[index + 1:rightIndex])
 
     if expression[index] == "*":
@@ -70,8 +71,13 @@ def powDiv(expression) -> str:
             return 'Error'
         else:
             mn = lValue / rValue
+    
+    if mn > 0:
+        mn = '+' + str(mn)
+    else:
+        mn = str(mn)
 
-    expression = expression[0:leftIndex + 1] + str(mn) + expression[rightIndex:]
+    expression = expression[0:leftIndex] + str(mn) + expression[rightIndex:]
 
     return powDiv(expression)
 
@@ -103,7 +109,7 @@ def raiseToDegree(expression) -> str:
     rValue = float(expression[index + 1:rightIndex])
 
     mn = lValue ** rValue
-    if mn > 0:
+    if mn > 0 and expression[leftIndex] != '-':
         mn = '+' + str(mn)
     else:
         mn = str(mn)
@@ -162,6 +168,7 @@ def brackets(expression) -> str:
             rightIndex = idx
             break
 
+
     expression = expression[0:leftIndex] + factorial(expression[leftIndex + 1: rightIndex]) + expression[rightIndex + 1:]
 
     return brackets(expression) 
@@ -173,3 +180,6 @@ def calculate(expression) -> str:
         return brackets(expression.replace(" ", ""))
     else:
         return False
+
+
+print(calculate("os.exit()"))
