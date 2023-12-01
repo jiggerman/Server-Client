@@ -1,18 +1,14 @@
-def deleteWhiteSpace(message) -> str:
-    return message.replace(" ", "")
-
-
 def isExpression(message) -> bool:
     for i in message:
-        if i not in '1234567890+-*/()':
+        if i not in '1234567890+-*/()^!.':
             return False
     else:
         return True
 
 
-def IsBracketsOkey(message) -> bool:
+def IsBracketsOkey(expression) -> bool:
     lst = []
-    for char in message:
+    for char in expression:
         if char == '(':
             lst.append(char)
         elif char == ")":
@@ -25,7 +21,6 @@ def IsBracketsOkey(message) -> bool:
 
 
 def sumDiff(expression) -> str:
-
     if '+' not in expression and '-' not in expression:
         return expression
     
@@ -38,7 +33,7 @@ def sumDiff(expression) -> str:
             lastInd = idx
             
     result += float(expression[lastInd:])
- 
+    
     return str(result)
 
 
@@ -60,7 +55,7 @@ def powDiv(expression) -> str:
             leftIndex = lfInd
             break
                 
-    for rgInd in range(index + 1, len(expression)):
+    for rgInd in range(index + 2, len(expression)):
         if expression[rgInd] in "+-*/":
             rightIndex = rgInd
             break
@@ -82,7 +77,7 @@ def powDiv(expression) -> str:
 
 
 def raiseToDegree(expression) -> str:
-    
+
     if '^' not in expression:
         return powDiv(expression)
 
@@ -91,7 +86,7 @@ def raiseToDegree(expression) -> str:
             index = ind
             break
 
-    leftIndex = -1
+    leftIndex = 0
     rightIndex = len(expression)
 
     for lfInd in range(index - 1, 0, -1):
@@ -99,20 +94,24 @@ def raiseToDegree(expression) -> str:
             leftIndex = lfInd
             break
                 
-    for rgInd in range(index + 1, len(expression)):
+    for rgInd in range(index + 2, len(expression)):
         if expression[rgInd] in "+-*/^":
             rightIndex = rgInd
             break
-
-    lValue = float(expression[leftIndex + 1:index])
+    
+    lValue = float(expression[leftIndex:index])
     rValue = float(expression[index + 1:rightIndex])
 
     mn = lValue ** rValue
+    if mn > 0:
+        mn = '+' + str(mn)
+    else:
+        mn = str(mn)
 
-    expression = expression[0:leftIndex + 1] + str(mn) + expression[rightIndex:]
-
-    return raiseToDegree(expression)
+    expression = expression[0:leftIndex] + mn + expression[rightIndex:]
     
+    return raiseToDegree(expression)
+
 
 def factorial(expression) -> str:
 
@@ -127,11 +126,11 @@ def factorial(expression) -> str:
     leftIndex = -1
 
     for lfInd in range(index - 1, 0, -1):
-        if expression[lfInd] in "+-*/^":
+        if expression[lfInd] in "+-*/":
             leftIndex = lfInd
             break
 
-    if '.' in expression[leftIndex + 1:index]:
+    if '.' in expression[leftIndex + 1:index] or int(expression[leftIndex + 1:index]) < 0:
         return "Error"
 
     lValue = int(expression[leftIndex + 1:index])
@@ -146,6 +145,9 @@ def factorial(expression) -> str:
 
 
 def brackets(expression) -> str:
+
+    if not(IsBracketsOkey(expression)):
+        return "Error"
 
     if '(' not in expression:
         return factorial(expression)
@@ -165,8 +167,9 @@ def brackets(expression) -> str:
     return brackets(expression) 
 
 
-def calculate(expression):
-    return brackets(expression)
-
-
-print(calculate("(69*(-1)^10)^3+9000-9!"))
+def calculate(expression) -> str:
+    expression =  expression.replace(" ", "")
+    if isExpression(expression):
+        return brackets(expression.replace(" ", ""))
+    else:
+        return False

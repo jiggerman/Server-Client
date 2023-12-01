@@ -31,8 +31,8 @@ def handle_client(conn, adress):
                     clients.pop(clients.index(adress))
                     break
 
-                if (isExpression(deleteWhiteSpace(msg))):
-                    answer = 'Answer: ' + str(calculate(deleteWhiteSpace(msg)))
+                if (calculate(msg)):
+                    answer = 'Answer: ' + str(calculate(msg))
                     conn.send(answer.encode(FORMAT))
 
                 if (msg == DISCONNECT_MESSAGE):
