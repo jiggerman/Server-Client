@@ -1,6 +1,6 @@
 def isExpression(message) -> bool:
     for i in message:
-        if i not in '1234567890+-*/()^!.':
+        if i not in '1234567890+-*/()^!. ':
             return False
     else:
         return True
@@ -175,8 +175,5 @@ def brackets(expression) -> str:
 
 
 def calculate(expression) -> str:
-    expression =  expression.replace(" ", "")
-    if isExpression(expression):
-        return brackets(expression.replace(" ", ""))
-    else:
-        return False
+    expression = expression.replace(" ", "")
+    return brackets(expression)

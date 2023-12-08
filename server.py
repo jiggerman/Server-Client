@@ -41,7 +41,7 @@ def handle_client(conn, adress):
 
                 data["name"] = "Server"
 
-                if (calculate(msg)):
+                if (isExpression(msg)):
                     answer = str(calculate(msg))
                     data["message"] = answer
                     conn.send((json.dumps(data)).encode(FORMAT))
