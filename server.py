@@ -1,5 +1,6 @@
 import socket
 import threading
+import json
 from calculate import *
 
 PORT = 5050
@@ -12,7 +13,7 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDRES)
 
 clients = []
-    
+
 
 def handle_client(conn, adress):
     try:
@@ -24,23 +25,30 @@ def handle_client(conn, adress):
         connection = True
 
         while connection:
-            msg = conn.recv(1024).decode()
+            data = json.loads(conn.recv(1024).decode())
+            msg = data.get("message")
+
             if msg:
                 if msg == 'Error':
                     connection = False
                     clients.pop(clients.index(adress))
                     break
 
-                if (calculate(msg)):
-                    answer = 'Answer: ' + str(calculate(msg))
-                    conn.send(answer.encode(FORMAT))
-
                 if (msg == DISCONNECT_MESSAGE):
                     connection = False
                     print(f"Connection with {adress} successfully terminated")
                     break
 
-                print(f"[ {adress} ] : {msg}")
+                data["name"] = "Server"
+
+                if (calculate(msg)):
+                    answer = str(calculate(msg))
+                    data["message"] = answer
+                    conn.send((json.dumps(data)).encode(FORMAT))
+                else:
+                    conn.send((json.dumps(data)).encode(FORMAT))
+
+                print("Sent: {}".format(data))
 
         clients.pop(clients.index(adress))
         conn.close()

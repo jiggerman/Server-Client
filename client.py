@@ -1,15 +1,21 @@
 import socket 
 import threading
 import time
+import json
 
 PORT = 5050
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = '!DISCONNECT!'
-SERVER = '192.168.1.69'
+SERVER = '192.168.1.70'
 ADDRES = (SERVER, PORT)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(ADDRES)
+
+data = {
+    "name": ADDRES,
+    "message": None
+}
 
 
 def catch_message():
@@ -18,13 +24,12 @@ def catch_message():
     while connect:
         try:
             while True:
-                msg = client.recv(1024).decode()
+                msg = json.loads(client.recv(1024).decode())
                 if msg:
-                    print(msg)
+                    print("Received: {}".format(msg))
 
                 time.sleep(0.2)
         except:
-            client.send("Error".encode(FORMAT))
             connect = False
 
 
@@ -34,14 +39,16 @@ def send_message():
     while connect:
         try:
             message = input()
-            message = message.encode(FORMAT)
-            client.send(message)
+            if message:
+                data['message'] = message
+                client.send((json.dumps(data)).encode(FORMAT))
+                print("Sent: {}".format(data))
+
             time.sleep(0.2)
         except:
             connect = False
             print(f"Connection is broken!")
-            client.send("Error".encode(FORMAT))
-            
+            client.send("Error".encode(FORMAT))  
 
 
 if __name__ == '__main__':
