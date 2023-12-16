@@ -22,9 +22,6 @@ def IsBracketsOkey(expression) -> bool:
 
 def sumDiff(expression) -> str:
     
-    if '+' not in expression and '-' not in expression:
-        return expression
-
     result = 0
     lastInd = 0
 
@@ -32,6 +29,8 @@ def sumDiff(expression) -> str:
         if char in '+-' and idx != 0:
             result += float(expression[lastInd:idx])
             lastInd = idx
+    else:
+        return expression
             
     result += float(expression[lastInd:])
     
@@ -40,13 +39,12 @@ def sumDiff(expression) -> str:
 
 def powDiv(expression) -> str:
 
-    if '*' not in expression and '/' not in expression:
-        return sumDiff(expression)
-
     for ind, char in enumerate(expression):
         if char in '*/':
             index = ind
             break
+    else:
+        return sumDiff(expression)
 
     leftIndex = 0
     rightIndex = len(expression)
@@ -84,13 +82,12 @@ def powDiv(expression) -> str:
 
 def raiseToDegree(expression) -> str:
 
-    if '^' not in expression:
-        return powDiv(expression)
-
     for ind, char in enumerate(expression):
-        if char in '^':
+        if char == '^':
             index = ind
             break
+    else:
+        return powDiv(expression)
 
     leftIndex = 0
     rightIndex = len(expression)
@@ -155,9 +152,6 @@ def brackets(expression) -> str:
     if not(IsBracketsOkey(expression)):
         return "Error"
 
-    if '(' not in expression:
-        return factorial(expression)
-    
     leftIndex = 0
     rightIndex = 0
 
@@ -167,6 +161,8 @@ def brackets(expression) -> str:
         elif char == ')':
             rightIndex = idx
             break
+    else:
+        return factorial(expression)
 
 
     expression = expression[0:leftIndex] + factorial(expression[leftIndex + 1: rightIndex]) + expression[rightIndex + 1:]
